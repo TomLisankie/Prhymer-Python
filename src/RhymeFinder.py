@@ -3,6 +3,7 @@ Created on Nov 22, 2016
 
 @author: Thomas Lisankie
 '''
+import math
 
 class RhymeFinder(object):
     '''
@@ -283,7 +284,7 @@ class RhymeFinder(object):
         
         if p1.isAVowelPhoneme and p2.isAVowelPhoneme:
             
-            stressDifference = abs(p1.stress - p2.stress)
+            stressDifference = math.fabs(p1.stress - p2.stress)
             return 5.0 - difference - stressDifference
         
         elif p1.isAVowelPhoneme == False and p2.isAVowelPhoneme == False:
@@ -347,7 +348,32 @@ class RhymeFinder(object):
         
         return rhymePercentile
         
-    def findDeductionForIndexSet(self, bestSet, longerWord):        
+    def findDeductionForIndexSet(self, bestSet, longerWord):
+        
+        deduction = 0.0
+        
+        if bestSet.indexes[0] > 0:
+            
+            if bestSet.indexes[0] > 1:
+                
+                deduction = deduction + math.log10(bestSet.indexes[0])
+                
+            else:
+                
+                deduction = deduction + 0.25
+        
+        if len(longerWord.listOfPhonemes) - 1 - bestSet.indexes[len(bestSet.indexes) - 1] > 0:
+            
+            deduction = deduction + math.log10(len(longerWord.listOfPhonemes) - 1 - bestSet.indexes[len(bestSet.indexes) - 1])
+            
+        for i in range(0, len(bestSet.indexes) - 1):
+            
+            index1 = bestSet.indexes[i]
+            index2 = bestSet.indexes[i + 1]
+            
+            deduction = deduction + (0.25 * (index2 - index1 - 1))
+            
+        return deduction        
 
 
 
