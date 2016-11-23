@@ -83,7 +83,61 @@ class RhymeFinder(object):
         foundConsonantCluster = False
         anchorOrSatellite = False
         
+        rhymeValue = 0.0
+        
+        newWord = None
+        
+        weightTowardsWordEnd = 0.1
+        
+        if anchor.listOfPhonemes[0].isAVowelPhoneme == False and anchor.listOfVowelPhonemes[0].isAVowelPhoneme == False and (anchor.listOfPhonemes[0].isEqualTo(satellite.listOfPhonemes[0] == False) and anchor.listOfPhonemes[1].isEqualTo(satellite.listOfPhonemes[1]) == False):
+            
+            foundConsonantCluster = True
+            
+            shortenedListOfPhonemes = anchor.listOfPhonemes[1:len(anchor.listOfPhonemes)]
+            
+            newWord = Word.Word(anchor.wordName, shortenedListOfPhonemes)
+            
+            anchorOrSatellite = True
+            
+        elif satellite.listOfPhonemes[0].isAVowelPhoneme == False and satellite.listOfVowelPhonemes[0].isAVowelPhoneme == False and (anchor.listOfPhonemes[0].isEqualTo(satellite.listOfPhonemes[0] == False) and anchor.listOfPhonemes[1].isEqualTo(satellite.listOfPhonemes[1]) == False):
+            
+            foundConsonantCluster = True
+            
+            shortenedListOfPhonemes = satellite.listOfPhonemes[1:len(anchor.listOfPhonemes)]
+            
+            newWord = Word.Word(satellite.wordName, shortenedListOfPhonemes)
+            
+            anchorOrSatellite = False
+            
+        if foundConsonantCluster == False:
+            
+            s = 0
+            for phoneme in anchor.listOfPhonemes:
+                
+                rhymeValue = rhymeValue + self.findRVBetweenPhonemes(phoneme, satellite.listOfPhonemes[s], True, s*weightTowardsWordEnd)
+                
+                s = s + 1
+        #No else because it's gonna be handled in the next if statement
+        
+        if foundConsonantCluster == False:
+            
+            return findRhymePercentile(rhymeValue, anchor)
+        
+        else:
+            
+            if anchorOrSatellite == True:
+                
+                return self.idealRhymeValue(newWord, satellite)
+            
+            else:
+                
+                return self.idealRhymeValue(anchor, newWord)
+        
     def idealRhymeValue(self, anchor, satellite):
+        print ""
+        
+    def findRVBetweenPhonemes(self, p1, p2, addWeight, weight):
+        
         print ""        
 
 
