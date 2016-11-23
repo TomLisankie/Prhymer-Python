@@ -1,0 +1,27 @@
+consonantal  1
+sonorant  2
+continuant  3
+delayed release  4
+approximant  5
+tap  6
+trill  7
+nasal  8
+voice  9
+spread-gl  10
+constr-gl  11
+labial  12
+round  13
+labiodental  14
+coronal  15
+anterior  16
+distributed  17
+strident  18
+lateral  19
+dorsal  20
+high  21
+low  22
+front  23
+back  24
+tense  25
+syllabic  26
+diphthong  27
