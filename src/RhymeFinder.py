@@ -121,7 +121,7 @@ class RhymeFinder(object):
         
         if foundConsonantCluster == False:
             
-            return findRhymePercentile(rhymeValue, anchor)
+            return self.findRhymePercentile(rhymeValue, anchor)
         
         else:
             
@@ -134,11 +134,220 @@ class RhymeFinder(object):
                 return self.idealRhymeValue(anchor, newWord)
         
     def idealRhymeValue(self, anchor, satellite):
-        print ""
         
+        shorterWord = None
+        longerWord = None
+        
+        if len(anchor.listOfPhonemes) < len(satellite.listOfPhonemes):
+            
+            shorterWord = anchor
+            longerWord = satellite
+            
+        else:
+            shorterWord = satellite
+            longerWord = anchor
+        
+        idealRhymeValue = 0.0
+        
+        firstSearch = True
+        foundStartingIndex = False
+        layers = []
+        nodesForThisLayer = []
+        
+        pastLayerNum = 0
+        
+        s = 0
+        
+        for shorterWordPhoneme in shorterWord.listOfPhonemes:
+            
+            weightTowardsWordEnd = 0.1
+            
+            #first search
+            if firstSearch == True:
+                
+                startNode = Node.Node()
+                
+                l = 0
+                
+                for longerWordPhoneme in longerWord.listOfPhonemes:
+                    
+                    RVBetweenPhonemes = self.findRVBetweenPhonemes(shorterWordPhoneme, longerWordPhoneme, True, l * weightTowardsWordEnd)
+                    
+                    if RVBetweenPhonemes > 1:
+                        
+                        foundStartingIndex = True
+                        
+                        indexSet = RVIndexPair.RVIndexPair(l, RVBetweenPhonemes)
+                        
+                        startNode.addIndexSet(indexSet)
+                    
+                    l = l + 1
+            
+                if foundStartingIndex == True:
+                    
+                    nodesForThisLayer.append(startNode)
+                    layers.append(Layer.Layer(nodesForThisLayer))
+                    firstSearch = False
+                
+                nodesForThisLayer = []
+            
+            else:
+                
+                n = 0
+                
+                for node in layers[pastLayerNum].nodes:
+                    
+                    nodeBeingExamined = layers[0].nodes[n]
+                    
+                    i = 0
+                    
+                    for indexSet in nodeBeingExamined.indexSets:
+                        
+                        setBeingExamined = nodeBeingExamined.indexSets[i]
+                        childNode = Node.Node()
+                        indexToStartAt = setBeingExamined.indexes[0]
+                        
+                        if indexToStartAt + 1 == len(longerWord.listOfPhonemes):
+                            print ""
+                        else:
+                            
+                            l = indexToStartAt + 1
+                            
+                            for x in range(l, len(longerWord.listOfPhonemes)):
+                                
+                                RVBetweenPhonemes = self.findRVBetweenPhonemes(shorterWordPhoneme, longerWord.listOfPhonemes[x], True, l * weightTowardsWordEnd)
+                                
+                                if RVBetweenPhonemes > 1:
+                                    
+                                    indexSet = RVIndexPair.RVIndexPair(x, RVBetweenPhonemes)
+                                    childNode.addIndexSet(indexSet)
+                            
+                            setBeingExamined.attachChildNode(childNode)
+                            nodesForThisLayer.append(childNode)
+                            
+                        i = i + 1
+                    
+                    n = n + 1
+            
+                layers.append(Layer.Layer(nodesForThisLayer))
+                nodesForThisLayer = []
+                
+                pastLayerNum = pastLayerNum + 1
+            
+            s = s + 1
+        
+        #find best path
+        
+        bestSet = None
+        nodeBeingExamined = None
+        
+        l = len(layers)
+        
+        for x in range(l, 0):
+            
+            for node in layers[x].nodes:
+                
+                nodeBeingExamined = layers[x].nodes[n]
+                
+                if len(nodeBeingExamined.indexSets) > 0:
+                    
+                    nodeBeingExamined.findBestIndexSetAndSendItUp()
+        
+            if x == 0 and len(layers[x].nodes) == 1:
+                
+                bestSet = nodeBeingExamined.bestSet
+        
+        idealRhymeValue = bestSet.getRhymeValueForSet()
+        
+        rhymeValue = idealRhymeValue - self.findDeductionForIndexSet(bestSet, longerWord)
+        
+        return self.findRhymePercentile(rhymeValue, longerWord)
+                
     def findRVBetweenPhonemes(self, p1, p2, addWeight, weight):
         
-        print ""        
+        p1Features = p1.features
+        p2Features = p2.features
+        biggerList = None
+        
+        if len(p1Features) >= len(p2Features):
+            
+            biggerList = p1Features
+            
+        else:
+            
+            biggerList = p2Features
+            
+        commonFeatures = list(set(p1Features).intersection(p2Features))
+        
+        difference = len(biggerList) - len(commonFeatures)
+        
+        if p1.isAVowelPhoneme and p2.isAVowelPhoneme:
+            
+            stressDifference = abs(p1.stress - p2.stress)
+            return 5.0 - difference - stressDifference
+        
+        elif p1.isAVowelPhoneme == False and p2.isAVowelPhoneme == False:
+            
+            commonFeaturesSize = len(commonFeatures)
+            specialDifference = 0
+            
+            if p1.phoneme != p2.phoneme:
+                
+                if 9 in commonFeatures == False:
+                    
+                    specialDifference = specialDifference + 0.1
+                    commonFeaturesSize = commonFeaturesSize - 1
+                    
+                if 2 in commonFeatures == False:
+                    
+                    specialDifference = specialDifference + 1
+                    commonFeaturesSize = commonFeaturesSize - 1
+                    
+            difference = len(biggerList) - commonFeaturesSize
+            
+            return 2.0 - (0.15*difference) - specialDifference
+        
+        else:
+            
+            commonFeaturesSize = len(commonFeatures)
+            specialDifference = 0
+            
+            if 9 in commonFeatures == False:
+                    
+                    specialDifference = specialDifference + 0.1
+                    commonFeaturesSize = commonFeaturesSize - 1
+                    
+            if 2 in commonFeatures == False:
+                    
+                specialDifference = specialDifference + 1
+                commonFeaturesSize = commonFeaturesSize - 1
+                
+            difference = len(biggerList) - commonFeaturesSize
+            
+            return 0.1*commonFeaturesSize + specialDifference
+        
+    def findRhymePercentile(self, rhymeValue, longerWord):
+        
+        homophonicRhymeValue = 0.0
+        rhymePercentile = 0.0
+        
+        weightTowardsWordEnd = 0.1
+        
+        i = 0
+        
+        for phoneme in longerWord.listOfPhonemes:
+            
+            homophonicRhymeValue = homophonicRhymeValue + self.findRVBetweenPhonemes(phoneme, phoneme, True, i * weightTowardsWordEnd)
+            
+        rhymePercentile = rhymeValue / homophonicRhymeValue
+        
+        if(rhymePercentile < 0):
+            
+            rhymePercentile = 0.0
+        
+        return rhymePercentile
+        
+    def findDeductionForIndexSet(self, bestSet, longerWord):        
 
 
 
