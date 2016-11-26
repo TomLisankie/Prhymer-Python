@@ -4,6 +4,7 @@ Created on Nov 22, 2016
 @author: Thomas Lisankie
 '''
 import math
+import Word
 
 class RhymeFinder(object):
     '''
