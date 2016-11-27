@@ -39,11 +39,10 @@ if __name__ == '__main__':
         
     elif TESTING == 1:
         print "Enter a word to find rhymes for: "
-        firstWordSpelling = raw_input()
+        wordSpelling = raw_input()
         
         
-        wordComponents = firstWordSpelling.split()
-        
+        wordComponents = wordSpelling.split()
         
         wordPhonemeString = ""
         
