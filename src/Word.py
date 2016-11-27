@@ -22,11 +22,22 @@ class Word(object):
             if phonemeString != '' or phonemeString != ' ':
                 self.listOfPhonemes.append(Phoneme.Phoneme(phonemeString))
             
-    '''def __init__(self, wordName, phonemes):
+    def getVowelPhonemes(self):
         
-        self.wordName = wordName
-        self.listOfPhonemes = phonemes
-        '''
+        vowelPhonemes = []
+        
+        for phoneme in self.listOfPhonemes:
+            if phoneme.isAVowelPhoneme:
+                vowelPhonemes.append(phoneme)
+        return vowelPhonemes
+    
+    def getVowelPhonemesAsString(self):
+        vowelPhonemeString = "";
+        vowelPhonemes = self.getVowelPhonemes()
+        
+        for vowel in vowelPhonemes:
+            vowelPhonemeString = vowelPhonemeString + vowel.phoneme + " "
+        return vowelPhonemeString
             
     
         
