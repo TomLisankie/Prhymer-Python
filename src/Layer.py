@@ -1,7 +1,7 @@
 '''
 Created on Nov 26, 2016
 
-@author: thomas
+@author: Thomas Lisankie
 '''
 
 class Layer(object):

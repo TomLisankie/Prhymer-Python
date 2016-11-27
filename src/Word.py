@@ -17,7 +17,7 @@ class Word(object):
         
         for phonemeString in phonemes:
             
-            self.listOfPhonemes.append(Phoneme(phonemeString))
+            self.listOfPhonemes.append(Phoneme.Phoneme(phonemeString))
             
     '''def __init__(self, wordName, phonemes):
         
