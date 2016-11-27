@@ -3,7 +3,10 @@ Created on Nov 22, 2016
 
 @author: Thomas Lisankie
 '''
+import Layer
 import math
+import Node
+import RVIndexPair
 import Word
 
 class RhymeFinder(object):
@@ -11,13 +14,14 @@ class RhymeFinder(object):
     classdocs
     '''
     
+    features = {}
+    
     def __init__(self, pathToDict, pathToFeatureSet):
         
         self.DEBUGGING = False
         self.dictionary = {}
         self.structureReference = {}
         self.wordList = []
-        self.features = {}
         
         self.buildWords(pathToDict, pathToFeatureSet)
         
