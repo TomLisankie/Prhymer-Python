@@ -12,14 +12,18 @@ class Phoneme(object):
         self.phoneme = phonemeString
         self.stress = -1
         self.isAVowelPhoneme = False
+        print self.phoneme
         
         if self.phoneme.endswith("0") or self.phoneme.endswith("1") or self.phoneme.endswith("2") or self.phoneme.endswith("3") or self.phoneme.endswith("4") or self.phoneme.endswith("5"):
-            stressText = self.phoneme.substring(len(self.phoneme) - 1)
-            self.phoneme = stressText = self.phoneme.substring(0, len(self.phoneme) - 1)
+            stressText = self.phoneme[len(self.phoneme) - 1 : len(self.phoneme)]
+            print stressText
+            self.phoneme = self.phoneme[0 : len(self.phoneme) - 1]
+            print self.phoneme
             self.stress = int(stressText)
             self.isAVowelPhoneme = True
         
-        features = RhymeFinder.RhymeFinder.features[self.phoneme]
+        self.features = RhymeFinder.RhymeFinder.features[self.phoneme]
+        print "finished"
         
     def isEqualTo(self, p2):
         if self.phoneme == p2.phoneme:

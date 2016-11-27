@@ -35,7 +35,7 @@ if __name__ == '__main__':
         firstWord = Word.Word(firstWordSpelling, firstWordPhonemeString)
         secondWord = Word.Word(secondWordSpelling, secondWordPhonemeString)
         
-        print finder.findRhymeValueAndPercentileForWords(firstWord, secondWord) * 100 + "%"
+        print finder.findRhymeValueAndPercentileForWords(firstWord, secondWord) * 100
         
     elif TESTING == 1:
         print 1    

@@ -11,13 +11,16 @@ class Word(object):
     def __init__(self, wordName, phonemeString):
         
         self.wordName = wordName
-        phonemes = phonemeString.split(" ")
-        
         self.listOfPhonemes = []
+        phonemes = phonemeString.split(" ")
+        phonemes.pop()
+        
+        
         
         for phonemeString in phonemes:
-            
-            self.listOfPhonemes.append(Phoneme.Phoneme(phonemeString))
+            print phonemes
+            if phonemeString != '' or phonemeString != ' ':
+                self.listOfPhonemes.append(Phoneme.Phoneme(phonemeString))
             
     '''def __init__(self, wordName, phonemes):
         

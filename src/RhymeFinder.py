@@ -95,7 +95,7 @@ class RhymeFinder(object):
         
         weightTowardsWordEnd = 0.1
         
-        if anchor.listOfPhonemes[0].isAVowelPhoneme == False and anchor.listOfVowelPhonemes[0].isAVowelPhoneme == False and (anchor.listOfPhonemes[0].isEqualTo(satellite.listOfPhonemes[0] == False) and anchor.listOfPhonemes[1].isEqualTo(satellite.listOfPhonemes[1]) == False):
+        if anchor.listOfPhonemes[0].isAVowelPhoneme == False and anchor.listOfPhonemes[0].isAVowelPhoneme == False and (anchor.listOfPhonemes[0].isEqualTo(satellite.listOfPhonemes[0]) == False and anchor.listOfPhonemes[1].isEqualTo(satellite.listOfPhonemes[1]) == False):
             
             foundConsonantCluster = True
             
@@ -105,7 +105,7 @@ class RhymeFinder(object):
             
             anchorOrSatellite = True
             
-        elif satellite.listOfPhonemes[0].isAVowelPhoneme == False and satellite.listOfVowelPhonemes[0].isAVowelPhoneme == False and (anchor.listOfPhonemes[0].isEqualTo(satellite.listOfPhonemes[0] == False) and anchor.listOfPhonemes[1].isEqualTo(satellite.listOfPhonemes[1]) == False):
+        elif satellite.listOfPhonemes[0].isAVowelPhoneme == False and satellite.listOfPhonemes[0].isAVowelPhoneme == False and (anchor.listOfPhonemes[0].isEqualTo(satellite.listOfPhonemes[0]) == False and anchor.listOfPhonemes[1].isEqualTo(satellite.listOfPhonemes[1]) == False):
             
             foundConsonantCluster = True
             
@@ -121,12 +121,14 @@ class RhymeFinder(object):
             for phoneme in anchor.listOfPhonemes:
                 
                 rhymeValue = rhymeValue + self.findRVBetweenPhonemes(phoneme, satellite.listOfPhonemes[s], True, s*weightTowardsWordEnd)
-                
+                print "s: "
+                print s
                 s = s + 1
         #No else because it's gonna be handled in the next if statement
         
         if foundConsonantCluster == False:
             
+            print rhymeValue
             return self.findRhymePercentile(rhymeValue, anchor)
         
         else:
@@ -138,6 +140,7 @@ class RhymeFinder(object):
             else:
                 
                 return self.idealRhymeValue(anchor, newWord)
+            
         
     def idealRhymeValue(self, anchor, satellite):
         
@@ -275,6 +278,9 @@ class RhymeFinder(object):
         p2Features = p2.features
         biggerList = None
         
+        print p1.features
+        print p2.features
+        
         if len(p1Features) >= len(p2Features):
             
             biggerList = p1Features
@@ -284,6 +290,7 @@ class RhymeFinder(object):
             biggerList = p2Features
             
         commonFeatures = list(set(p1Features).intersection(p2Features))
+        print commonFeatures
         
         difference = len(biggerList) - len(commonFeatures)
         
@@ -299,12 +306,12 @@ class RhymeFinder(object):
             
             if p1.phoneme != p2.phoneme:
                 
-                if 9 in commonFeatures == False:
+                if 9 not in commonFeatures:
                     
                     specialDifference = specialDifference + 0.1
                     commonFeaturesSize = commonFeaturesSize - 1
                     
-                if 2 in commonFeatures == False:
+                if 2 in commonFeatures:
                     
                     specialDifference = specialDifference + 1
                     commonFeaturesSize = commonFeaturesSize - 1
@@ -318,19 +325,19 @@ class RhymeFinder(object):
             commonFeaturesSize = len(commonFeatures)
             specialDifference = 0
             
-            if 9 in commonFeatures == False:
+            if 9 not in commonFeatures:
                     
                     specialDifference = specialDifference + 0.1
                     commonFeaturesSize = commonFeaturesSize - 1
                     
-            if 2 in commonFeatures == False:
+            if 2 in commonFeatures:
                     
                 specialDifference = specialDifference + 1
                 commonFeaturesSize = commonFeaturesSize - 1
                 
             difference = len(biggerList) - commonFeaturesSize
             
-            return 0.1*commonFeaturesSize + specialDifference
+            return (0.1*commonFeaturesSize) + specialDifference
         
     def findRhymePercentile(self, rhymeValue, longerWord):
         
@@ -344,7 +351,9 @@ class RhymeFinder(object):
         for phoneme in longerWord.listOfPhonemes:
             
             homophonicRhymeValue = homophonicRhymeValue + self.findRVBetweenPhonemes(phoneme, phoneme, True, i * weightTowardsWordEnd)
-            
+        
+        print rhymeValue
+        print homophonicRhymeValue    
         rhymePercentile = rhymeValue / homophonicRhymeValue
         
         if(rhymePercentile < 0):
@@ -377,7 +386,8 @@ class RhymeFinder(object):
             index2 = bestSet.indexes[i + 1]
             
             deduction = deduction + (0.25 * (index2 - index1 - 1))
-            
+        
+        print deduction    
         return deduction        
 
 
