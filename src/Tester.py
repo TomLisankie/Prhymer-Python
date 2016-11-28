@@ -10,7 +10,7 @@ import Word
 if __name__ == '__main__':
     pathToDict = "cmudict-0.7b_modified.txt"
     pathToFeatureSet = "features.txt"
-    TESTING = 1
+    TESTING = 0
     finder = RhymeFinder.RhymeFinder(pathToDict, pathToFeatureSet)
     
     if TESTING == 0:
@@ -41,7 +41,6 @@ if __name__ == '__main__':
         print "Enter a word to find rhymes for: "
         wordSpelling = raw_input()
         
-        
         wordComponents = wordSpelling.split()
         
         wordPhonemeString = ""
@@ -49,7 +48,7 @@ if __name__ == '__main__':
         for component in wordComponents:
             wordPhonemeString = wordPhonemeString + finder.dictionary[component.lower()] + " "
             
-        firstWord = Word.Word(firstWordSpelling, wordPhonemeString)
+        firstWord = Word.Word(wordSpelling, wordPhonemeString)
         vowelString = firstWord.getVowelPhonemesAsString()
         beginningIndex = finder.structureReference[vowelString]
         nextStructFound = False
@@ -61,7 +60,7 @@ if __name__ == '__main__':
             currentWord = finder.wordList[currentIndex]
             newWord = Word.Word(currentWord, finder.dictionary[currentWord])
             
-            if newWord.getVowelPhonemesAsString != vowelString:
+            if newWord.getVowelPhonemesAsString() != vowelString:
                 break
             else:
                 secondWord = Word.Word(currentWord, finder.dictionary[currentWord])

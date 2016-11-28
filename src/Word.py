@@ -18,7 +18,7 @@ class Word(object):
         
         
         for phonemeString in phonemes:
-            print phonemes
+            
             if phonemeString != '' or phonemeString != ' ':
                 self.listOfPhonemes.append(Phoneme.Phoneme(phonemeString))
             

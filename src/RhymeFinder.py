@@ -121,14 +121,11 @@ class RhymeFinder(object):
             for phoneme in anchor.listOfPhonemes:
                 
                 rhymeValue = rhymeValue + self.findRVBetweenPhonemes(phoneme, satellite.listOfPhonemes[s], True, s*weightTowardsWordEnd)
-                print "s: "
-                print s
                 s = s + 1
         #No else because it's gonna be handled in the next if statement
         
         if foundConsonantCluster == False:
             
-            print rhymeValue
             return self.findRhymePercentile(rhymeValue, anchor)
         
         else:
@@ -183,7 +180,7 @@ class RhymeFinder(object):
                     RVBetweenPhonemes = self.findRVBetweenPhonemes(shorterWordPhoneme, longerWordPhoneme, True, l * weightTowardsWordEnd)
                     
                     if RVBetweenPhonemes > 1:
-                        
+                        print RVBetweenPhonemes
                         foundStartingIndex = True
                         
                         indexSet = RVIndexPair.RVIndexPair(l, RVBetweenPhonemes)
@@ -206,7 +203,7 @@ class RhymeFinder(object):
                 
                 for node in layers[pastLayerNum].nodes:
                     
-                    nodeBeingExamined = layers[0].nodes[n]
+                    nodeBeingExamined = layers[pastLayerNum].nodes[n]
                     
                     i = 0
                     
@@ -224,10 +221,10 @@ class RhymeFinder(object):
                             
                             for x in range(l, len(longerWord.listOfPhonemes)):
                                 
-                                RVBetweenPhonemes = self.findRVBetweenPhonemes(shorterWordPhoneme, longerWord.listOfPhonemes[x], True, l * weightTowardsWordEnd)
+                                RVBetweenPhonemes = self.findRVBetweenPhonemes(shorterWordPhoneme, longerWord.listOfPhonemes[x], True, x * weightTowardsWordEnd)
                                 
                                 if RVBetweenPhonemes > 1:
-                                    
+                                    print RVBetweenPhonemes
                                     indexSet = RVIndexPair.RVIndexPair(x, RVBetweenPhonemes)
                                     childNode.addIndexSet(indexSet)
                             
@@ -252,8 +249,9 @@ class RhymeFinder(object):
         
         l = len(layers)
         
-        for x in range(l, 0):
+        for x in range(l-1, -1, -1):
             
+            n = 0
             for node in layers[x].nodes:
                 
                 nodeBeingExamined = layers[x].nodes[n]
@@ -261,12 +259,15 @@ class RhymeFinder(object):
                 if len(nodeBeingExamined.indexSets) > 0:
                     
                     nodeBeingExamined.findBestIndexSetAndSendItUp()
+                
+                n = n + 1
         
             if x == 0 and len(layers[x].nodes) == 1:
                 
                 bestSet = nodeBeingExamined.bestSet
         
-        idealRhymeValue = bestSet.getRhymeValueForSet()
+        idealRhymeValue = bestSet.rhymeValueForSet
+        print "IDEAL: ", idealRhymeValue
         
         rhymeValue = idealRhymeValue - self.findDeductionForIndexSet(bestSet, longerWord)
         
@@ -278,9 +279,6 @@ class RhymeFinder(object):
         p2Features = p2.features
         biggerList = None
         
-        print p1.features
-        print p2.features
-        
         if len(p1Features) >= len(p2Features):
             
             biggerList = p1Features
@@ -290,7 +288,6 @@ class RhymeFinder(object):
             biggerList = p2Features
             
         commonFeatures = list(set(p1Features).intersection(p2Features))
-        print commonFeatures
         
         difference = len(biggerList) - len(commonFeatures)
         
@@ -351,9 +348,10 @@ class RhymeFinder(object):
         for phoneme in longerWord.listOfPhonemes:
             
             homophonicRhymeValue = homophonicRhymeValue + self.findRVBetweenPhonemes(phoneme, phoneme, True, i * weightTowardsWordEnd)
+            
+            i = i + 1
         
-        print rhymeValue
-        print homophonicRhymeValue    
+        print rhymeValue, homophonicRhymeValue   
         rhymePercentile = rhymeValue / homophonicRhymeValue
         
         if(rhymePercentile < 0):
@@ -387,7 +385,7 @@ class RhymeFinder(object):
             
             deduction = deduction + (0.25 * (index2 - index1 - 1))
         
-        print deduction    
+        print deduction   
         return deduction        
 
 

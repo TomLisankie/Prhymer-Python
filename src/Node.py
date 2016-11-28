@@ -6,7 +6,7 @@ Created on Nov 26, 2016
 
 class Node(object):
 
-    def __init__(self, params):
+    def __init__(self):
         self.indexSets = []
         self.parentIndexSet = None
         self.bestSet = None
@@ -15,23 +15,24 @@ class Node(object):
         self.indexSets.append(set)
         
     def findBestIndexSetAndSendItUp(self):
-        bestSet = None
+        best = None
         
         i = 0
         for set in self.indexSets:
             
             if i == 0:
-                bestSet = set
+                best = set
             else:
-                if set.rhymeValueForSet > bestSet.rhymeValueForSet:
-                    bestSet = set
+                if set.rhymeValueForSet > best.rhymeValueForSet:
+                    best = set
             
+            print i
             i = i + 1
-            
-        self.bestSet = bestSet
+           
+        self.bestSet = best
         
         if self.parentIndexSet != None:
-            self.parentIndexSet.addIndexes(bestSet.indexes, bestSet.rhymeValueForSet)
+            self.parentIndexSet.addIndexes(best.indexes, best.rhymeValueForSet)
         
         
         

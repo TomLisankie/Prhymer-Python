@@ -8,7 +8,8 @@ class RVIndexPair(object):
 
     def __init__(self, index, RVBetweenPhonemes):
         self.indexes = [index]
-        self.rhymeValueForSet = RVBetweenPhonemes
+        self.rhymeValueForSet = 0.0
+        self.rhymeValueForSet = self.rhymeValueForSet + RVBetweenPhonemes
         self.childNode = None
         
     def addIndexes(self, indexesToAdd, RVBetweenPhonemes):
