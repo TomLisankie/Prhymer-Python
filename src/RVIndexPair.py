@@ -7,7 +7,8 @@ Created on Nov 26, 2016
 class RVIndexPair(object):
 
     def __init__(self, index, RVBetweenPhonemes):
-        self.indexes = [index]
+        self.indexes = []
+        self.indexes.append(index)
         self.rhymeValueForSet = 0.0
         self.rhymeValueForSet = self.rhymeValueForSet + RVBetweenPhonemes
         self.childNode = None

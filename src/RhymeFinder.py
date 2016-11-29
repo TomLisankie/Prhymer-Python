@@ -251,24 +251,20 @@ class RhymeFinder(object):
         numOfLayers = len(layers)
         
         for l in range(numOfLayers-1, -1, -1):
-            
-            n = 0
+            print "l:", l
             for node in layers[l].nodes:
                 
-                nodeBeingExamined = layers[l].nodes[n]
+                nodeBeingExamined = node
                 
                 if len(nodeBeingExamined.indexSets) > 0:
                     
                     nodeBeingExamined.findBestIndexSetAndSendItUp()
-                
-                n = n + 1
         
-            if l == 0 and len(layers[l].nodes) == 1:
+            if (l == 0) and (len(layers[l].nodes) == 1):
                 
                 bestSet = nodeBeingExamined.bestSet
         
-        for index in bestSet.indexes:
-            print "INDEX:", index
+        print bestSet.indexes
         
         idealRhymeValue = bestSet.rhymeValueForSet
         print "IDEAL: ", idealRhymeValue
