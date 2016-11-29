@@ -182,7 +182,7 @@ class RhymeFinder(object):
                     if RVBetweenPhonemes > 1:
                         print RVBetweenPhonemes
                         foundStartingIndex = True
-                        
+                        print "STARTING INDEX"
                         indexSet = RVIndexPair.RVIndexPair(l, RVBetweenPhonemes)
                         
                         startNode.addIndexSet(indexSet)
@@ -239,6 +239,7 @@ class RhymeFinder(object):
                 nodesForThisLayer = []
                 
                 pastLayerNum = pastLayerNum + 1
+                print "PAST LAYER NUM:", pastLayerNum
             
             s = s + 1
         
@@ -247,14 +248,14 @@ class RhymeFinder(object):
         bestSet = None
         nodeBeingExamined = None
         
-        l = len(layers)
+        numOfLayers = len(layers)
         
-        for x in range(l-1, -1, -1):
+        for l in range(numOfLayers-1, -1, -1):
             
             n = 0
-            for node in layers[x].nodes:
+            for node in layers[l].nodes:
                 
-                nodeBeingExamined = layers[x].nodes[n]
+                nodeBeingExamined = layers[l].nodes[n]
                 
                 if len(nodeBeingExamined.indexSets) > 0:
                     
@@ -262,9 +263,12 @@ class RhymeFinder(object):
                 
                 n = n + 1
         
-            if x == 0 and len(layers[x].nodes) == 1:
+            if l == 0 and len(layers[l].nodes) == 1:
                 
                 bestSet = nodeBeingExamined.bestSet
+        
+        for index in bestSet.indexes:
+            print "INDEX:", index
         
         idealRhymeValue = bestSet.rhymeValueForSet
         print "IDEAL: ", idealRhymeValue

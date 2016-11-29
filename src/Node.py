@@ -11,20 +11,20 @@ class Node(object):
         self.parentIndexSet = None
         self.bestSet = None
         
-    def addIndexSet(self, set):
-        self.indexSets.append(set)
+    def addIndexSet(self, theSet):
+        self.indexSets.append(theSet)
         
     def findBestIndexSetAndSendItUp(self):
         best = None
         
         i = 0
-        for set in self.indexSets:
+        for theSet in self.indexSets:
             
             if i == 0:
-                best = set
+                best = theSet
             else:
-                if set.rhymeValueForSet > best.rhymeValueForSet:
-                    best = set
+                if theSet.rhymeValueForSet > best.rhymeValueForSet:
+                    best = theSet
             
             print i
             i = i + 1
