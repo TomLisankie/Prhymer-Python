@@ -1,10 +1,10 @@
-
+import OrderedPair
 
 class CartesianProduct(object):
 	"""docstring for CartesianProduct"""
 	def __init__(self, word1, word2):
 
-		cartesianProductMatrix = [[]]
+		self.cartesianProductMatrix = [[]]
 
 		shorterWord = None
 		longerWord = None
@@ -18,30 +18,30 @@ class CartesianProduct(object):
 			longerWord = word1
 
 		'creates Cartesian product (shorterWord X longerWord)'
-		for s in xrange(0, len(shorterWord.listOfPhonemes)):
+		for s in range(0, len(shorterWord.listOfPhonemes)):
 			
 			currentRow = []
 
-			for l in xrange(0, len(longerWord.listOfPhonemes)):
+			for l in range(0, len(longerWord.listOfPhonemes)):
 				newOrderedPair = OrderedPair.OrderedPair(shorterWord.listOfPhonemes[s], longerWord.listOfPhonemes[l], l)
 				currentRow.append(newOrderedPair)
 
-			cartesianProductMatrix.append(currentRow)
+			self.cartesianProductMatrix.append(currentRow)
 
 	def resetOrderedPairRVs(self):
 
 		currentRow = None
 
-		for i in xrange(0, len(cartesianProductMatrix)):
+		for i in range(0, len(self.cartesianProductMatrix)):
 
-			currentRow = cartesianProductMatrix[i]
+			currentRow = self.cartesianProductMatrix[i]
 
-			for j in xrange(0, len(currentRow)):
+			for j in range(0, len(currentRow)):
 				
 				currentRow[j].resetRV()
 
 	def removeTopRow(self):
-		cartesianProductMatrix.pop(0)
+		self.cartesianProductMatrix.pop(0)
 
 
 

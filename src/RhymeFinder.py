@@ -3,10 +3,7 @@ Created on Nov 22, 2016
 
 @author: Thomas Lisankie <link285@gmail.com>
 '''
-import Layer
 import math
-import Node
-import RVIndexPair
 import Word
 import CartesianProduct
 import OrderedPair
@@ -96,7 +93,7 @@ class RhymeFinder(object):
             
             echelon = len(cartesianProduct.cartesianProductMatrix)
             
-            allRVs.append(findBestRV(cartesianProduct, echelon, [], 0, len(cartesianProduct.cartesianProductMatrix[echelon]), len(longerWord.listOfPhonemes)))
+            allRVs.append(self.findBestRV(cartesianProduct, echelon, [], 0, len(cartesianProduct.cartesianProductMatrix[echelon]), len(longerWord.listOfPhonemes)))
 
             cartesianProduct.removeTopRow()
 
@@ -116,13 +113,13 @@ class RhymeFinder(object):
 
         currentRow = cp.cartesianProductMatrix[echelon]
 
-        for i in xrange(echelon, bound):
+        for i in range(echelon, bound):
             currentRow[i].rhymeValue = currentRow[i].rhymeValue + cumulative
 
         bestPairForRow = None
         indexToAdd = 0
 
-        for i in xrange(echelon, bound):
+        for i in range(echelon, bound):
             if i == echelon:
                 bestPairForRow = currentRow[i]
                 indexToAdd = i

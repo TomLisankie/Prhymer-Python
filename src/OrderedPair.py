@@ -7,7 +7,7 @@ class OrderedPair(object):
 		shorterWordPhoneme = p1.phoneme
 		longerWordPhoneme = p2.phoneme
 		indexes = []
-		originalRhymeValue = findRVBetweenPhonemes(p1, p2)
+		originalRhymeValue = self.findRVBetweenPhonemes(p1, p2)
 		rhymeValue = originalRhymeValue
 
 	def resetRV():
@@ -17,7 +17,7 @@ class OrderedPair(object):
 		
 		deduction = 0.0
 
-		for i in xrange(0, len(indexes) - 1):
+		for i in range(0, len(indexes) - 1):
 
 			index1 = indexes[i]
 			index2 = indexes[i + 1]
