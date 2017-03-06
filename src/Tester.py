@@ -14,11 +14,11 @@ if __name__ == '__main__':
     finder = RhymeFinder.RhymeFinder(pathToDict, pathToFeatureSet)
     
     if TESTING == 0:
-        print "Enter first word: "
-        firstWordSpelling = raw_input()
+        print("Enter first word: ")
+        firstWordSpelling = input()
         
-        print "Enter second word: "
-        secondWordSpelling = raw_input()
+        print("Enter second word: ")
+        secondWordSpelling = input()
         
         firstWordComponents = firstWordSpelling.split()
         secondWordComponents = secondWordSpelling.split()
@@ -35,11 +35,11 @@ if __name__ == '__main__':
         firstWord = Word.Word(firstWordSpelling, firstWordPhonemeString)
         secondWord = Word.Word(secondWordSpelling, secondWordPhonemeString)
         
-        print finder.findRhymeValueAndPercentileForWords(firstWord, secondWord) * 100
+        print(finder.findRhymePercentileForWords(firstWord, secondWord) * 100)
         
     elif TESTING == 1:
-        print "Enter a word to find rhymes for: "
-        wordSpelling = raw_input()
+        print("Enter a word to find rhymes for: ")
+        wordSpelling = input()
         
         wordComponents = wordSpelling.split()
         
@@ -64,7 +64,7 @@ if __name__ == '__main__':
                 break
             else:
                 secondWord = Word.Word(currentWord, finder.dictionary[currentWord])
-                print currentWord + "," + finder.findRhymeValueAndPercentileForWords(firstWord, secondWord) * 100    
+                print(currentWord + "," + finder.findRhymePercentileForWords(firstWord, secondWord) * 100)    
         
         
         

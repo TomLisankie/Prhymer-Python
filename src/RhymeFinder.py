@@ -1,13 +1,15 @@
 '''
 Created on Nov 22, 2016
 
-@author: Thomas Lisankie
+@author: Thomas Lisankie <link285@gmail.com>
 '''
 import Layer
 import math
 import Node
 import RVIndexPair
 import Word
+import CartesianProduct
+import OrderedPair
 
 class RhymeFinder(object):
     '''
@@ -37,7 +39,7 @@ class RhymeFinder(object):
             components = line.split("  ")
             
             if len(components) != 2:
-                print "The lines aren't separated by two spaces"
+                print("The lines aren't separated by two spaces")
                 break
             
             if components[0] == "#":
@@ -58,7 +60,7 @@ class RhymeFinder(object):
             
             if len(components) != 2:
                 
-                print "The lines aren't separated by two spaces"
+                print("The lines aren't separated by two spaces")
                 break
             
             features = components[1].split(" ")
@@ -69,206 +71,76 @@ class RhymeFinder(object):
                     featureInts.append(int(feature))
                 
             self.features[components[0]] = featureInts
-            
-    def findRhymeValueAndPercentileForWords(self, anchor, satellite):
-        
+
+    ###################
+    'New code goes here'
+    def findRhymePercentileForWords(self, word1, word2):
+
         rhymePercentile = 0.0
-        
-        if len(anchor.listOfPhonemes) == len(satellite.listOfPhonemes):
-            
-            rhymePercentile = self.regularRhymeValue(anchor, satellite)
-            
-        else:
-            
-            rhymePercentile = self.idealRhymeValue(anchor, satellite)
-            
-        return rhymePercentile
-    
-    def regularRhymeValue(self, anchor, satellite):
-        
-        foundConsonantCluster = False
-        anchorOrSatellite = False
-        
-        rhymeValue = 0.0
-        
-        newWord = None
-        
-        weightTowardsWordEnd = 0.1
-        
-        if anchor.listOfPhonemes[0].isAVowelPhoneme == False and anchor.listOfPhonemes[0].isAVowelPhoneme == False and (anchor.listOfPhonemes[0].isEqualTo(satellite.listOfPhonemes[0]) == False and anchor.listOfPhonemes[1].isEqualTo(satellite.listOfPhonemes[1]) == False):
-            
-            foundConsonantCluster = True
-            
-            shortenedListOfPhonemes = anchor.listOfPhonemes[1:len(anchor.listOfPhonemes)]
-            
-            newWord = Word.Word(anchor.wordName, shortenedListOfPhonemes)
-            
-            anchorOrSatellite = True
-            
-        elif satellite.listOfPhonemes[0].isAVowelPhoneme == False and satellite.listOfPhonemes[0].isAVowelPhoneme == False and (anchor.listOfPhonemes[0].isEqualTo(satellite.listOfPhonemes[0]) == False and anchor.listOfPhonemes[1].isEqualTo(satellite.listOfPhonemes[1]) == False):
-            
-            foundConsonantCluster = True
-            
-            shortenedListOfPhonemes = satellite.listOfPhonemes[1:len(anchor.listOfPhonemes)]
-            
-            newWord = Word.Word(satellite.wordName, shortenedListOfPhonemes)
-            
-            anchorOrSatellite = False
-            
-        if foundConsonantCluster == False:
-            
-            s = 0
-            for phoneme in anchor.listOfPhonemes:
-                
-                rhymeValue = rhymeValue + self.findRVBetweenPhonemes(phoneme, satellite.listOfPhonemes[s], True, s*weightTowardsWordEnd)
-                s = s + 1
-        #No else because it's gonna be handled in the next if statement
-        
-        if foundConsonantCluster == False:
-            
-            return self.findRhymePercentile(rhymeValue, anchor)
-        
-        else:
-            
-            if anchorOrSatellite == True:
-                
-                return self.idealRhymeValue(newWord, satellite)
-            
-            else:
-                
-                return self.idealRhymeValue(anchor, newWord)
-            
-        
-    def idealRhymeValue(self, anchor, satellite):
-        
-        shorterWord = None
         longerWord = None
-        
-        if len(anchor.listOfPhonemes) < len(satellite.listOfPhonemes):
-            
-            shorterWord = anchor
-            longerWord = satellite
-            
+
+        'this conditional finds which word is longer and which is shorter'
+        if len(word1.listOfPhonemes) < len(word2.listOfPhonemes):
+            longerWord = word2
         else:
-            shorterWord = satellite
-            longerWord = anchor
-        
-        idealRhymeValue = 0.0
-        
-        firstSearch = True
-        foundStartingIndex = False
-        layers = []
-        nodesForThisLayer = []
-        
-        pastLayerNum = 0
-        
-        s = 0
-        
-        for shorterWordPhoneme in shorterWord.listOfPhonemes:
+            longerWord = word1
+
+        allRVs = []
+
+        '1 - Find Cartesian product (shorterWord X longerWord)'
+        cartesianProduct = CartesianProduct.CartesianProduct(word1, word2)
+
+        '2 - Calculate RVs'
+        echelon = 0
+        while len(cartesianProduct.cartesianProductMatrix) != 0:
             
-            weightTowardsWordEnd = 0.1
+            echelon = len(cartesianProduct.cartesianProductMatrix)
             
-            #first search
-            if firstSearch == True:
-                
-                startNode = Node.Node()
-                
-                l = 0
-                
-                for longerWordPhoneme in longerWord.listOfPhonemes:
-                    
-                    RVBetweenPhonemes = self.findRVBetweenPhonemes(shorterWordPhoneme, longerWordPhoneme, True, l * weightTowardsWordEnd)
-                    
-                    if RVBetweenPhonemes > 1:
-                        
-                        foundStartingIndex = True
-                        indexSet = RVIndexPair.RVIndexPair(l, RVBetweenPhonemes)
-                        
-                        startNode.addIndexSet(indexSet)
-                    
-                    l = l + 1
-            
-                if foundStartingIndex == True:
-                    
-                    nodesForThisLayer.append(startNode)
-                    layers.append(Layer.Layer(nodesForThisLayer))
-                    firstSearch = False
-                
-                nodesForThisLayer = []
-            
+            allRVs.append(findBestRV(cartesianProduct, echelon, [], 0, len(cartesianProduct.cartesianProductMatrix[echelon]), len(longerWord.listOfPhonemes)))
+
+            cartesianProduct.removeTopRow()
+
+            '''resets rhyme values of OrderedPairs to their original value so 
+            that previous runthroughs of the findBestRV() method 
+            have no effect i.e. it makes sure it has the correct 
+            data to work with:'''
+
+            cartesianProduct.resetOrderedPairRVs()
+            echelon = 0
+
+        rhymePercentile = findRhymePercentile(max(allRVs), longerWord)
+
+        return rhymePercentile
+
+    def findBestRV(self, cp, echelon, indexes, cumulative, bound, lSize):
+
+        currentRow = cp.cartesianProductMatrix[echelon]
+
+        for i in xrange(echelon, bound):
+            currentRow[i].rhymeValue = currentRow[i].rhymeValue + cumulative
+
+        bestPairForRow = None
+        indexToAdd = 0
+
+        for i in xrange(echelon, bound):
+            if i == echelon:
+                bestPairForRow = currentRow[i]
+                indexToAdd = i
             else:
-                
-                n = 0
-                
-                for node in layers[pastLayerNum].nodes:
-                    
-                    nodeBeingExamined = layers[pastLayerNum].nodes[n]
-                    
-                    i = 0
-                    
-                    for indexSet in nodeBeingExamined.indexSets:
-                        
-                        setBeingExamined = nodeBeingExamined.indexSets[i]
-                        childNode = Node.Node()
-                        indexToStartAt = setBeingExamined.indexes[0]
-                        
-                        if indexToStartAt + 1 == len(longerWord.listOfPhonemes):
-                            print ""
-                        else:
-                            
-                            l = indexToStartAt + 1
-                            
-                            for x in range(l, len(longerWord.listOfPhonemes)):
-                                
-                                RVBetweenPhonemes = self.findRVBetweenPhonemes(shorterWordPhoneme, longerWord.listOfPhonemes[x], True, x * weightTowardsWordEnd)
-                                
-                                if RVBetweenPhonemes > 1:
-                                    print RVBetweenPhonemes
-                                    indexSet = RVIndexPair.RVIndexPair(x, RVBetweenPhonemes)
-                                    childNode.addIndexSet(indexSet)
-                            
-                            setBeingExamined.attachChildNode(childNode)
-                            nodesForThisLayer.append(childNode)
-                            
-                        i = i + 1
-                    
-                    n = n + 1
-            
-                layers.append(Layer.Layer(nodesForThisLayer))
-                nodesForThisLayer = []
-                
-                pastLayerNum = pastLayerNum + 1
-            
-            s = s + 1
-        
-        #find best path
-        
-        bestSet = None
-        nodeBeingExamined = None
-        
-        numOfLayers = len(layers)
-        
-        for l in range(numOfLayers-1, -1, -1):
-            print "l:", l
-            for node in layers[l].nodes:
-                
-                nodeBeingExamined = node
-                
-                if len(nodeBeingExamined.indexSets) > 0:
-                    
-                    nodeBeingExamined.findBestIndexSetAndSendItUp()
-        
-            if (l == 0) and (len(layers[l].nodes) == 1):
-                
-                bestSet = nodeBeingExamined.bestSet
-        
-        print bestSet.indexes
-        
-        idealRhymeValue = bestSet.rhymeValueForSet
-        
-        rhymeValue = idealRhymeValue - self.findDeductionForIndexSet(bestSet, longerWord)
-        
-        return self.findRhymePercentile(rhymeValue, longerWord)
+                if currentRow[i].rhymeValue > bestPairForRow.rhymeValue:
+                    bestPairForRow = currentRow[i]
+                    indexToAdd = i
+
+        indexes.append(indexToAdd)
+
+        if echelon == 0:
+            bestPairForRow.indexes = indexes
+            bestPairForRow.calculateGapPenalty(lSize)
+            return bestPairForRow.rhymeValue
+        else:
+            echelon = echelon - 1
+            return findBestRV(cp, echelon, indexes, bestPairForRow.rhymeValue, indexes[len(indexes) - 1], lSize)
+
                 
     def findRVBetweenPhonemes(self, p1, p2, addWeight, weight):
         
@@ -348,7 +220,7 @@ class RhymeFinder(object):
             
             i = i + 1
         
-        print rhymeValue, homophonicRhymeValue   
+        print(rhymeValue, homophonicRhymeValue)   
         rhymePercentile = rhymeValue / homophonicRhymeValue
         
         if(rhymePercentile < 0):
@@ -382,7 +254,7 @@ class RhymeFinder(object):
             
             deduction = deduction + (0.25 * (index2 - index1 - 1))
         
-        print deduction   
+        print(deduction)   
         return deduction        
 
 
