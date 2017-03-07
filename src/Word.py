@@ -15,8 +15,6 @@ class Word(object):
         phonemes = phonemeString.split(" ")
         phonemes.pop()
         
-        
-        
         for phonemeString in phonemes:
             
             if phonemeString != '' or phonemeString != ' ':
