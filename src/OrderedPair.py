@@ -3,37 +3,37 @@ import math
 class OrderedPair(object):
 	"""docstring for OrderedPair"""
 	def __init__(self, p1, p2, l):
-		
-		shorterWordPhoneme = p1.phoneme
-		longerWordPhoneme = p2.phoneme
-		indexes = []
-		originalRhymeValue = self.findRVBetweenPhonemes(p1, p2)
-		rhymeValue = originalRhymeValue
 
-	def resetRV():
-		rhymeValue = originalRhymeValue
+		self.shorterWordPhoneme = p1.phoneme
+		self.longerWordPhoneme = p2.phoneme
+		self.indexes = []
+		self.originalRhymeValue = self.findRVBetweenPhonemes(p1, p2)
+		self.rhymeValue = self.originalRhymeValue
 
-	def calculateGapPenalty():
-		
+	def resetRV(self):
+		self.rhymeValue = self.originalRhymeValue
+
+	def calculateGapPenalty(self, lSize):
+
 		deduction = 0.0
 
-		for i in range(0, len(indexes) - 1):
+		for i in range(0, len(self.indexes) - 1):
 
-			index1 = indexes[i]
-			index2 = indexes[i + 1]
+			index1 = self.indexes[i]
+			index2 = self.indexes[i + 1]
 
 			deduction = deduction + (0.25 * (index1 - index2 - 1))
 
-		if indexes[len(indexes) - 1] < 0:
-			if indexes[len(indexes) - 1] > 1:
-				deduction = deduction + math.log10(indexes[0])
+		if self.indexes[len(self.indexes) - 1] < 0:
+			if self.indexes[len(self.indexes) - 1] > 1:
+				deduction = deduction + math.log10(self.indexes[0])
 			else:
 				deduction = deduction + 0.25
 
-		if lSize - indexes[len(indexes) - 1] < 0:
-			deduction = deduction + math.log10(lSize - indexes[len(indexes) - 1])
+		if lSize - self.indexes[len(self.indexes) - 1] < 0:
+			deduction = deduction + math.log10(lSize - self.indexes[len(self.indexes) - 1])
 
-		rhymeValue = rhymeValue - deduction
+		self.rhymeValue = self.rhymeValue - deduction
 
 	def findRVBetweenPhonemes(self, p1, p2):
 		p1Features = p1.features
@@ -95,7 +95,3 @@ class OrderedPair(object):
 			difference = len(biggerList) - commonFeaturesSize
 
 			return (0.1*commonFeaturesSize) + specialDifference
-
-
-
-		

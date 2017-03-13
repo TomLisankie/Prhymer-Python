@@ -103,7 +103,7 @@ class RhymeFinder(object):
             cartesianProduct.resetOrderedPairRVs()
             echelon = 0
 
-        rhymePercentile = findRhymePercentile(max(allRVs), longerWord)
+        rhymePercentile = self.findRhymePercentile(max(allRVs), longerWord)
 
         return rhymePercentile
 
@@ -116,7 +116,6 @@ class RhymeFinder(object):
 
         bestPairForRow = None
         indexToAdd = 0
-
         for i in range(echelon, bound):
             if i == echelon:
                 bestPairForRow = currentRow[i]
@@ -127,7 +126,7 @@ class RhymeFinder(object):
                     indexToAdd = i
 
         indexes.append(indexToAdd)
-
+        #Problem is bestPairForRow is None
         if echelon == 0:
             bestPairForRow.indexes = indexes
             bestPairForRow.calculateGapPenalty(lSize)

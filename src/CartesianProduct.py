@@ -4,7 +4,7 @@ class CartesianProduct(object):
 	"""docstring for CartesianProduct"""
 	def __init__(self, word1, word2):
 
-		self.cartesianProductMatrix = [[]]
+		self.cartesianProductMatrix = []
 
 		shorterWord = None
 		longerWord = None
@@ -19,9 +19,7 @@ class CartesianProduct(object):
 
 		'creates Cartesian product (shorterWord X longerWord)'
 		for s in range(0, len(shorterWord.listOfPhonemes)):
-			
 			currentRow = []
-
 			for l in range(0, len(longerWord.listOfPhonemes)):
 				newOrderedPair = OrderedPair.OrderedPair(shorterWord.listOfPhonemes[s], longerWord.listOfPhonemes[l], l)
 				currentRow.append(newOrderedPair)
@@ -37,13 +35,8 @@ class CartesianProduct(object):
 			currentRow = self.cartesianProductMatrix[i]
 
 			for j in range(0, len(currentRow)):
-				
+
 				currentRow[j].resetRV()
 
 	def removeTopRow(self):
 		self.cartesianProductMatrix.pop(0)
-
-
-
-		
-		
