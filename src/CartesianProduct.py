@@ -1,7 +1,7 @@
 import OrderedPair
 
 class CartesianProduct(object):
-	"""use itertools.product instead: https://docs.python.org/3/library/itertools.html#itertools.product"""
+	"""docstring for CartesianProduct"""
 	def __init__(self, word1, word2):
 
 		self.cartesianProductMatrix = []
