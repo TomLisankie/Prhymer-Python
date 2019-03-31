@@ -86,7 +86,7 @@ class RhymeFinder(object):
 
         '1 - Find Cartesian product (shorterWord X longerWord)'
         cP = [(p1, p2) for p1 in word1.listOfPhonemes for p2 in word2.listOfPhonemes]
-        pprint.pprint(cP)
+        
         cartesianProduct = CartesianProduct.CartesianProduct(word1, word2)
 
         '2 - Calculate RVs'
