@@ -12,14 +12,24 @@ class Phoneme(object):
         self.phoneme = phonemeString
         self.stress = -1
         self.isAVowelPhoneme = False
+
+        cutOff = 0
+        for char in phonemeString:
+            if char.isdigit():
+                break
+            cutOff += 1
+
+        stressText = self.phoneme[cutOff : len(self.phoneme)]
+
+        if stressText.isdigit ():
+            self.stress = int (stressText)
         
-        if self.phoneme.endswith("0") or self.phoneme.endswith("1") or self.phoneme.endswith("2") or self.phoneme.endswith("3") or self.phoneme.endswith("4") or self.phoneme.endswith("5"):
-            stressText = self.phoneme[len(self.phoneme) - 1 : len(self.phoneme)]
-            
-            self.phoneme = self.phoneme[0 : len(self.phoneme) - 1]
-            
-            self.stress = int(stressText)
+        if self.stress >= 0 and self.stress <= 5:
             self.isAVowelPhoneme = True
+        else:
+            self.stress = -1
+            
+        self.phoneme = self.phoneme[0 : cutOff]
         
         self.features = rhyme_finder.RhymeFinder.features[self.phoneme]
         
