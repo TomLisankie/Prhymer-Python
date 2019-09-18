@@ -15,8 +15,7 @@ class Word(object):
         phonemes = phonemeString.split(" ")
         
         for phonemeString in phonemes:
-            
-            if phonemeString != '' or phonemeString != ' ':
+            if phonemeString != "" and phonemeString != " ":
                 self.listOfPhonemes.append(phoneme.Phoneme(phonemeString))
             
     def getVowelPhonemes(self):
