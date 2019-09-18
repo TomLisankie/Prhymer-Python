@@ -4,14 +4,14 @@ Created on Nov 22, 2016
 @author: Thomas Lisankie
 '''
 
-import RhymeFinder
-import Word
+import rhyme_finder
+import word
 
 if __name__ == '__main__':
     pathToDict = "cmudict-0.7b_modified.txt"
     pathToFeatureSet = "features.txt"
     TESTING = 0
-    finder = RhymeFinder.RhymeFinder(pathToDict, pathToFeatureSet)
+    finder = rhyme_finder.RhymeFinder(pathToDict, pathToFeatureSet)
 
     if TESTING == 0:
         firstWordSpelling = input("Enter first word: ")
@@ -30,8 +30,8 @@ if __name__ == '__main__':
         for component in secondWordComponents:
             secondWordPhonemeString = secondWordPhonemeString + finder.dictionary[component.lower()] + " "
 
-        firstWord = Word.Word(firstWordSpelling, firstWordPhonemeString)
-        secondWord = Word.Word(secondWordSpelling, secondWordPhonemeString)
+        firstWord = word.Word(firstWordSpelling, firstWordPhonemeString)
+        secondWord = word.Word(secondWordSpelling, secondWordPhonemeString)
 
         print(finder.findRhymePercentileForWords(firstWord, secondWord) * 100, "%", sep = '')
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
         for component in wordComponents:
             wordPhonemeString = wordPhonemeString + finder.dictionary[component.lower()] + " "
 
-        firstWord = Word.Word(wordSpelling, wordPhonemeString)
+        firstWord = word.Word(wordSpelling, wordPhonemeString)
         vowelString = firstWord.getVowelPhonemesAsString()
         beginningIndex = finder.structureReference[vowelString]
         nextStructFound = False
@@ -55,10 +55,10 @@ if __name__ == '__main__':
             currentIndex = currentIndex + 1
 
             currentWord = finder.wordList[currentIndex]
-            newWord = Word.Word(currentWord, finder.dictionary[currentWord])
+            newWord = word.Word(currentWord, finder.dictionary[currentWord])
 
             if newWord.getVowelPhonemesAsString() != vowelString:
                 break
             else:
-                secondWord = Word.Word(currentWord, finder.dictionary[currentWord])
+                secondWord = word.Word(currentWord, finder.dictionary[currentWord])
                 print(currentWord + "," + finder.findRhymePercentileForWords(firstWord, secondWord) * 100)

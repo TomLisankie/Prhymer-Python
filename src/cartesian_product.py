@@ -1,4 +1,4 @@
-import OrderedPair
+import ordered_pair
 
 class CartesianProduct(object):
 	"""docstring for CartesianProduct"""
@@ -21,8 +21,8 @@ class CartesianProduct(object):
 		for s in range(0, len(shorterWord.listOfPhonemes)):
 			currentRow = []
 			for l in range(0, len(longerWord.listOfPhonemes)):
-				newOrderedPair = OrderedPair.OrderedPair(shorterWord.listOfPhonemes[s], longerWord.listOfPhonemes[l], l)
-				currentRow.append(newOrderedPair)
+				new_ordered_pair = ordered_pair.OrderedPair(shorterWord.listOfPhonemes[s], longerWord.listOfPhonemes[l], l)
+				currentRow.append(new_ordered_pair)
 
 			self.cartesianProductMatrix.append(currentRow)
 

@@ -4,7 +4,7 @@ Created on Nov 23, 2016
 @author: Thomas Lisankie
 '''
 
-import Phoneme
+import phoneme
 
 class Word(object):
 
@@ -18,7 +18,7 @@ class Word(object):
         for phonemeString in phonemes:
             
             if phonemeString != '' or phonemeString != ' ':
-                self.listOfPhonemes.append(Phoneme.Phoneme(phonemeString))
+                self.listOfPhonemes.append(phoneme.Phoneme(phonemeString))
             
     def getVowelPhonemes(self):
         

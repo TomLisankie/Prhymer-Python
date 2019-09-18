@@ -3,7 +3,7 @@ Created on Nov 26, 2016
 
 @author: Thomas Lisankie
 '''
-import RhymeFinder
+import rhyme_finder
 
 class Phoneme(object):
 
@@ -21,7 +21,7 @@ class Phoneme(object):
             self.stress = int(stressText)
             self.isAVowelPhoneme = True
         
-        self.features = RhymeFinder.RhymeFinder.features[self.phoneme]
+        self.features = rhyme_finder.RhymeFinder.features[self.phoneme]
         
     def isEqualTo(self, p2):
         if self.phoneme == p2.phoneme:

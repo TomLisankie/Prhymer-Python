@@ -4,9 +4,9 @@ Created on Nov 22, 2016
 @author: Thomas Lisankie <link285@gmail.com>
 '''
 import math
-import Word
-import CartesianProduct
-import OrderedPair
+import word
+import cartesian_product
+import ordered_pair
 import itertools
 import pprint
 
@@ -87,7 +87,7 @@ class RhymeFinder(object):
         '1 - Find Cartesian product (shorterWord X longerWord)'
         cP = [(p1, p2) for p1 in word1.listOfPhonemes for p2 in word2.listOfPhonemes]
         
-        cartesianProduct = CartesianProduct.CartesianProduct(word1, word2)
+        cartesianProduct = cartesian_product.CartesianProduct(word1, word2)
 
         '2 - Calculate RVs'
         echelon = 0
