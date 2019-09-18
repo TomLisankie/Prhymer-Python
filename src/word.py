@@ -13,7 +13,6 @@ class Word(object):
         self.wordName = wordName
         self.listOfPhonemes = []
         phonemes = phonemeString.split(" ")
-        phonemes.pop()
         
         for phonemeString in phonemes:
             
